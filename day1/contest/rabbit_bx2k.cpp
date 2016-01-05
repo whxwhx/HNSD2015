@@ -33,6 +33,17 @@ int m, n;
 void add(int x, int d){
 	for(;x <= n; x += (-x) & x) s[x] += d;
 }
+LL sum(int x){
+	LL ans = 0;
+	for(;x;x -= (-x) & x) ans += s[x];
+	return ans;
+}
+
+/*
+a[i]表示一个i..n的+1标记
+所以sum(i)表示i这个点的值
+sum(i)是单调递增的
+*/
 
 int main(){
 	int m0, md, n0, nd; scanf("%d%d%d%d%d%d",&m,&n,&m0,&md,&n0,&nd);
@@ -44,13 +55,44 @@ int main(){
 	rep(i,1,m) cout <<a[i]<<' ';cout <<endl;
 	rep(i,1,n) cout <<b[i]<<' ';cout <<endl;
 	*/
-	sort(a + 1, a + m + 1, cmp); sort(b + 1, b + n + 1, cmp);
+	sort(a + 1, a + m + 1, cmp); sort(b + 1, b + n + 1);
 	LL ans = 0;
 	rep(i,1,n) add(i, b[i]), add(i + 1, -b[i]);
 
-	int j = 1; while (b[j] == 0) j++;
 	rep(i,1,m){
-		
+		//find the first element that is *positive* >.<
+		int k = 0; 
+		LL S = 0;
+		dep(i,21,1){
+			k |= 1 << i;
+			if (k <= n && S + s[k] <= 0) S += s[k]; else k ^= 1 << i;
+		}
+		k++;
+		if (k > n) break;
+
+		if (k < n - a[i] + 1) {
+			ans += a[i];
+			k = n - a[i] + 1; 
+			LL t = sum(k);
+			//find the first element that equals to sum(k)
+			S = 0; int x = 0;
+			dep(i,21,1){
+				x |= 1 << i;
+				if (x <= n && S + s[x] < t) S += s[x]; else x ^= 1 << i;
+			}
+			int l = x + 1;
+			//find the last element that equals to sum(k)
+			S = 0, x = 0;
+			dep(i,21,1){
+				x |= 1 << i;
+				if (x <= n && S + s[x] <= t) S += s[x]; else x ^= 1 << i;
+			}
+			int r = x;
+			//add 
+			add(l, -1);
+			add(l + r - k + 1, 1);
+			add(r + 1, -1);
+		}else add(k, -1), ans += n - k + 1;
 	}
 
 	printf("%lld\n",ans);
