@@ -37,15 +37,27 @@ void dfs(fac a, int b, int k, int d){
 	}
 }
 
-int main(){
-	int k; scanf("%d",&k);
-	dfs((fac){1,1},2,k,1);
+int s[N], l = 0, f[N];
+
+void dfs(int a, int b){
 	
-	int c1 = 0;
-	rep(i,1,N - 10) if (cnt[i]){
-		int t = (N - 10) / i;
-		rep(j,2,t) cnt[i * j] = 0;
-		printf(" %d,",i);
+}
+
+int main(){
+	rep(k,2,7){
+		l = 0;
+		rep(i,1,N - 10) cnt[i] = f[i] = 0;
+		dfs((fac){1,1},2,k,1);
+	
+		int c1 = 0;
+		rep(i,1,N - 10) if (cnt[i]){
+			int t = (N - 10) / i;
+			rep(j,2,t) cnt[i * j] = 0;
+			s[++l] = i;
+		}
+
+		dfs(1, 0);
+		printf("\n");
 	}
 	return 0;
 }
