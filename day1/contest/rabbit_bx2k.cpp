@@ -1,4 +1,5 @@
 //用bx2k那个贪心+BIT的办法写的
+//递增排序后，一段相等的元素的一个后缀-1可以转为它的一个前缀-1，这样就能不用平衡树仍然维护一个有序的数列了
 #include <iostream>
 #include <cstdio>
 #include <cmath>
@@ -23,8 +24,7 @@ typedef unsigned long long uLL;
 const int N = 2500010;
 #define min(a,b) ((a) < (b) ? (a) : (b))
 typedef long long LL;
-int a[N], b[N];
-LL s[N];
+int a[N], b[N], s[N];
 inline bool cmp(const int a, const int b){
 	return a > b;
 }
@@ -33,8 +33,8 @@ int m, n;
 void add(int x, int d){
 	for(;x <= n; x += (-x) & x) s[x] += d;
 }
-LL sum(int x){
-	LL ans = 0;
+int sum(int x){
+	int ans = 0;
 	for(;x;x -= (-x) & x) ans += s[x];
 	return ans;
 }
@@ -63,7 +63,7 @@ int main(){
 		//find the first element that is *positive* >.<
 		int k = 0; 
 		LL S = 0;
-		dep(i,21,1){
+		dep(i,21,0){
 			k |= 1 << i;
 			if (k <= n && S + s[k] <= 0) S += s[k]; else k ^= 1 << i;
 		}
@@ -73,17 +73,17 @@ int main(){
 		if (k < n - a[i] + 1) {
 			ans += a[i];
 			k = n - a[i] + 1; 
-			LL t = sum(k);
+			int t = sum(k);
 			//find the first element that equals to sum(k)
 			S = 0; int x = 0;
-			dep(i,21,1){
+			dep(i,21,0){
 				x |= 1 << i;
 				if (x <= n && S + s[x] < t) S += s[x]; else x ^= 1 << i;
 			}
 			int l = x + 1;
 			//find the last element that equals to sum(k)
 			S = 0, x = 0;
-			dep(i,21,1){
+			dep(i,21,0){
 				x |= 1 << i;
 				if (x <= n && S + s[x] <= t) S += s[x]; else x ^= 1 << i;
 			}
