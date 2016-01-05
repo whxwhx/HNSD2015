@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdio>
+#include <map>
 #include <algorithm>
 #define rep(i,a,b) for(int i = a; i <= b; i++)
 using namespace std;
@@ -37,18 +38,24 @@ void dfs(fac a, int b, int k, int d){
 	}
 }
 
-int s[N], l = 0, f[N];
+int s[N], l = 0;
+map<int, int> f;
 
-void dfs(int a, int b){
-	
+void dfs(int x, int c, int F){
+	if (x > l) f[c] += F;
+	else {
+		dfs(x + 1, c, F);
+		dfs(x + 1, lcm(c, s[x]), -F);
+	}
 }
 
 int main(){
 	rep(k,2,7){
 		l = 0;
-		rep(i,1,N - 10) cnt[i] = f[i] = 0;
+		f.clear();
+		rep(i,1,N - 10) cnt[i] = 0;
 		dfs((fac){1,1},2,k,1);
-	
+		
 		int c1 = 0;
 		rep(i,1,N - 10) if (cnt[i]){
 			int t = (N - 10) / i;
@@ -56,8 +63,11 @@ int main(){
 			s[++l] = i;
 		}
 
-		dfs(1, 0);
-		printf("\n");
+		dfs(1, 1, 1);
+		printf("{");
+		for(map<int, int>::iterator it = f.begin(); it != f.end(); it++)
+			if (it->second) printf(",{%d,%d}",it->first,it->second);
+		printf("},\n");
 	}
 	return 0;
 }
