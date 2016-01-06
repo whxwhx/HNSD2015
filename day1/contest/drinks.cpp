@@ -15,7 +15,7 @@ bool cmp (const drink &a, const drink &b){
 bool operator < (const drink &a, const drink &b){
 	return (a.a[1] < b.a[1]) || (a.a[1] == b.a[1] && a.a[2] < b.a[2]) || (a.a[1] == b.a[1] && a.a[2] == b.a[2] && a.a[0] < b.a[0]);
 }
-int s[N];
+int s[N * 2 + 10];
 void add(int x, int d){
 	for(;x <= (n << 1) + 1; x += (-x) & x) s[x] += d;
 }
@@ -63,7 +63,6 @@ int main(){
 	//case 2
 	ans += 1LL * n * (n - 1) / 2; rep(i,1,n) ans -= f[i];
 	//case 3
-	ans += 1LL * n * (n - 1) * (n - 2) / 6;
 		//case 3.1
 			rep(i,1,n) ans += 1LL * f[i] * (f[i] - 1) / 2;
 		//case 3.2
@@ -81,5 +80,7 @@ int main(){
 					if (j != k) ans -= 1LL * F[i][j] * F[i][k]; else ans -= 1LL * F[i][j] * (F[i][k] - 1) / 2;
 				}
 			}
+	ans += 1LL * n * (n - 1) * (n - 2) / 6;
+	cout <<ans<<endl;
 	return 0;
 }
